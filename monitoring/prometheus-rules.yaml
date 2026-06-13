@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: secure-app-alerts
+  namespace: default
+  labels:
+    role: alert-rules
+spec:
+  groups:
+  - name: secure-app.rules
+    rules:
+    - alert: HighMemoryUsage
+      expr: container_memory_usage_bytes{container="secure-app"} > 400000000
+      for: 2m
+      labels:
+        severity: warning
+      annotations:
+        summary: "High Memory usage detected for secure-app container"
+        description: "Container memory has exceeded 400MB threshold for more than 2 minutes."
